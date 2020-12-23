@@ -13,13 +13,27 @@ RUN apk add --no-cache git maven openjdk8 yarn
 # WORKDIR /spotbugs
 # RUN ./gradlew
 
-# RUN git clone --branch spotbugs-maven-plugin-4.1.4 --depth 1 \
-#  https://github.com/spotbugs/spotbugs-maven-plugin.git
-# WORKDIR /spotbugs-maven-plugin
-# RUN mvn -DskipTests=true clean install
+RUN git clone --branch spotbugs-maven-plugin-4.1.4 --depth 1 \
+ https://github.com/spotbugs/spotbugs-maven-plugin.git
+WORKDIR /spotbugs-maven-plugin
+RUN mvn -DskipTests=true clean install
+
+WORKDIR /
 
 RUN git clone --branch jenkins-2.269 --depth 1 https://github.com/jenkinsci/jenkins.git
 WORKDIR /jenkins
 RUN mvn -DskipTests=true clean install
 
-CMD ["tail", "-f", "/dev/null"]
+FROM alpine:edge
+
+COPY --from=config-alpine /etc/localtime /etc/localtime
+COPY --from=config-alpine /etc/timezone  /etc/timezone
+
+EXPOSE 8080
+
+RUN apk add --no-cache openjdk8-jre
+
+COPY --from=src-jenkins /jenkins/war/target/jenkins.war /var/lib/jenkins/jenkins.war
+
+ENTRYPOINT ["java", "-jar", "/var/lib/jenkins/jenkins.war"]
+# CMD ["tail", "-f", "/dev/null"]

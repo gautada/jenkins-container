@@ -9,10 +9,6 @@ FROM alpine:edge as src-jenkins
 
 RUN apk add --no-cache git maven openjdk8 yarn
 
-# RUN git clone --branch 4.2.0 --depth 1 https://github.com/spotbugs/spotbugs.git
-# WORKDIR /spotbugs
-# RUN ./gradlew
-
 RUN git clone --branch spotbugs-maven-plugin-4.1.4 --depth 1 \
  https://github.com/spotbugs/spotbugs-maven-plugin.git
 WORKDIR /spotbugs-maven-plugin
@@ -35,5 +31,6 @@ RUN apk add --no-cache openjdk8-jre
 
 COPY --from=src-jenkins /jenkins/war/target/jenkins.war /var/lib/jenkins/jenkins.war
 
-ENTRYPOINT ["java", "-jar", "/var/lib/jenkins/jenkins.war"]
+ENTRYPOINT ["java"]
+CMD ["-jar", "/var/lib/jenkins/jenkins.war"]
 # CMD ["tail", "-f", "/dev/null"]

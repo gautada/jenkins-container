@@ -29,6 +29,14 @@ EXPOSE 8080
 
 RUN apk add --no-cache openjdk8-jre
 
+RUN mkdir -p /opt/jenkins-data \
+ && addgroup jenkins \
+ && adduser -D -s /bin/sh -G jenkins jenkins \
+ && echo 'jenkins:jenkins' | chpasswd \ 
+ && ln -s /opt/jenkis-data /home/jenkins \
+ && chown -R jenkins:jenkins /home/jenkins \
+ && chmod -R 750 /home/jenkins
+
 COPY --from=src-jenkins /jenkins/war/target/jenkins.war /var/lib/jenkins/jenkins.war
 
 ENTRYPOINT ["java"]

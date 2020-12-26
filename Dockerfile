@@ -44,6 +44,13 @@ FROM alpine:edge
 COPY --from=config-alpine /etc/localtime /etc/localtime
 COPY --from=config-alpine /etc/timezone  /etc/timezone
 
+RUN echo "
+
+# Temporary docker host setting.
+# Waiting on Issue: #4
+export DOCKER_HOST=192.168.4.200" >> /etc/profile
+
+
 EXPOSE 8080
 
 RUN apk add --no-cache git openjdk8-jre

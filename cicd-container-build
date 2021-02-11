@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Simple docker build that takes the image name from the parameter.  This should
+# provide a 90%+ solution for builds.  customize as needed.
+
+echo "+----------------------+"
+echo "|                      |"
+echo "| DOCKER BUILD         |"
+echo "|                      |"
+echo "+----------------------+"
+
+export IMAGE_NAME="$1"
+export IMAGE_TAG="jenkins-build"
+export PARAMETERS="$2"
+
+docker build --tag $IMAGE_NAME:$IMAGE_TAG . --no-cache &&
+./cicd-docker-run $IMAGE_NAME $IMAGE_TAG $PARAMETERS
+
+

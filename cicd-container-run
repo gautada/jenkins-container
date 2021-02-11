@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# This is a standard run for docker containers.  This invokes the test script
+
+echo "+----------------------+"
+echo "|                      |"
+echo "| DOCKER RUN           |"
+echo "|                      |"
+echo "+----------------------+"
+export IMAGE_NAME="$1"
+export IMAGE_TAG="$2"
+export PARAMETERS="$3"
+export CONTAINER_NAME="$(date +"%y%m%d-%H%M%S")-$IMAGE_NAME"
+
+docker run -d --rm --name $CONTAINER_NAME $IMAGE_NAME:$IMAGE_TAG $PARAMETERS &&
+./test $CONTAINER_NAME &&
+docker stop $CONTAINER_NAME

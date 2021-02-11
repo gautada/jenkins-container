@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "+----------------------+"
+echo "|                      |"
+echo "| Test: jenkins        |"
+echo "|                      |"
+echo "+----------------------+"
+docker exec -i $1 /usr/bin/java -jar /var/lib/jenkins/jenkins.war --version
